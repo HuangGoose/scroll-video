@@ -1,0 +1,52 @@
+<swiper bindanimationfinish="changeSwiper" current="{{current}}" circular="{{circular}}" vertical>
+	<block wx:for="{{videoList}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+		<swiper-item>
+       
+      <!-- 简单实现视频的上下滑动播放，现在搜出的大多数方案是显示一个Video组件，通过平移动画进行切换播放源，但是实际效果还是感觉不是很好。 在以前Video组件不支持在scroll-view、swiper中使用的，现在支持使用，最能想到的方案就是swipe+video嵌套，官方提供的video-swipe组件问题太多。 -->
+      
+      <!-- 视频加载慢或者黑屏的问题，尝试可能的解决方案：
+		
+			1. 视频编码格式的问题，将视频转码，需要有转码平台,可能需要付费，阿里云或者腾讯云都有
+			2. OSS + CDN , 视频资源放在OSS上存储，不占用服务器带宽，CDN解决了资源加载慢的问题, 如果阿里云CDN出现了卡顿之类的现象， 可以看这篇https://developers.weixin.qq.com/community/develop/doc/0002c2279402f0c1f538a74215b800
+			3. 增加服务器带宽，需要付费 -->
+
+
+      <!-- v2.4.0 起 Video组件支持同层渲染 -->
+
+      <!-- 思路：永远保证只有一个视频容器, 记录Swiper的 current，
+      并且对 swiper-item的下标做比对来判断当前用户看到的是哪个 swiper-item，
+      一致则展示Video组件. -->
+
+			<block wx:if="{{current==index}}">
+				<video id="myVideo" 
+				src="{{item.url}}" 
+				object-fit="cover" 
+				loop='{{true}}' 
+				
+				initial-time='0.01' 
+				custom-cache="{{false}}" 
+				bindwaiting="videoWaiting" 
+				bindtimeupdate="timeupdate" 
+				bindloadedmetadata="loadedmetadata" 
+				bindprogress="progress" 
+				bindplay="eventPlay" 
+				autoplay='{{true}}' 
+				show-progress="{{true}}" 
+				show-fullscreen-btn="{{false}}" 
+				show-play-btn="{{false}}" 
+				show-center-play-btn="{{fasle}}" 
+				enable-progress-gesture="{{false}}" 
+				catchtap="playOrPause"></video>
+			</block>
+			<!-- <image style="position:absolute;left:0; top:0;width: 100%; height: 100%; z-index:{{rzindex}};" src="https://p99.pstatp.com/large/12c5c0009891b32e947b7.jpg"></image> -->
+			<!-- <block wx:else>
+					<image style="width: 100%; height: 100%;" src="https://p99.pstatp.com/large/12c5c0009891b32e947b7.jpg"></image>
+				</block> -->
+
+			<!-- 暂停 -->
+			<view wx:if="{{!isPlaying}}" data-index="{{index}}" bindtap="playOrPause">
+				<image src="/image/pause.png" class="pause"></image>
+			</view>
+		</swiper-item>
+	</block>
+</swiper>

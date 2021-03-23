@@ -1,0 +1,36 @@
+<!--pages/translationvideo/translationvideo.wxml-->
+<!-- <text>pages/translationvideo/translationvideo.wxml</text> -->
+
+<!-- 使用平移动画，效果不是很好 -->
+
+<!-- 思路：永远保证只有一个视频容器, 根据手势滑动的范围，确定上滑或者下滑，从而切换视频源播放-->
+
+
+<view class="container" catchtap="changePlayStatus" bindtouchstart="touchStart" bindtouchend="touchEnd" bindtouchcancel="touchCancel">
+  <view class="animation-wrapper" animation="{{animation}}">
+    <block wx:for="{{videos}}" wx:key="{{item.videoUrl}}">
+      <view class="animation-image-wrapper">
+        <image mode="aspectFill" class="animation-image" src="{{item.poster}}"></image>
+      </view>
+    </block>
+  </view>
+  <video class="vvideo" 
+  id="kdvideo"
+  bindtimeupdate="bindtimeupdate"  
+  binderror="binderror" 
+  autoplay="{{autoplay}}" 
+  hidden="{{animationShow}}" 
+  objectFit="cover" 
+  src="{{videos[videoIndex].videoUrl}}" 
+  bindplay="bindplay" 
+  controls="{{controls}}" 
+  loop="true"
+  show-progress="{{true}}" 
+	show-fullscreen-btn="{{false}}" 
+	show-play-btn="{{false}}" 
+	show-center-play-btn="{{fasle}}" 
+	enable-progress-gesture="{{false}}">
+  </video>
+  <image class="play-btn" wx:if="{{!playState && !animationShow}}" src="/image/pause.png"></image>
+  <!-- <progress class="progress" percent="{{percent}}" activeColor="#ffffff" backgroundColor="#A9A9A9" stroke-width="1"  wx:if="{{!animationShow}}" /> -->
+</view>
